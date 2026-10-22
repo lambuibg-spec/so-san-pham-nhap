@@ -1565,21 +1565,22 @@ loc();
   #goiY{order:8}
   #dem2{order:9;margin-top:0;font-size:12px;width:100%}
   #baoAnh{order:10}
-  /* 22/10 — chủ dự án: "hiển thị nhỏ quá, fix lại hiển thị 2 sản phẩm trên 1 trang" ⇒ thẻ TO hơn (bản 21/10 là hàng gọn 4 thẻ / màn): ảnh vuông 172 px bên trái, mã + số + tên chữ 14 px bên phải, 3 ô kênh đủ chữ + nút tích bên dưới, ≈ 2 thẻ mỗi màn */
+  /* 22/10 — chủ dự án: "VẪN ĐANG HIỆN 3 SẢN PHẨM, CHỈ HIỆN 2 SẢN PHẨM THÔI" (thẻ chưa có phiếu thấp ~200 px ⇒ lọt 3 thẻ) ⇒ MỖI THẺ CAO ĐÚNG NỬA MÀN HÌNH (calc theo chiều cao màn thật của điện thoại, ảnh giãn lấp chỗ thừa) ⇒ luôn 2 thẻ / màn */
   .luoi{margin-top:8px;grid-template-columns:1fr;gap:10px}
-  .the{display:grid;grid-template-columns:172px minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr) auto auto;column-gap:10px;row-gap:4px;align-items:start;padding:9px;border-radius:12px}
-  .the .than{display:contents}
-  .the>img,.the>.trong{grid-column:1;grid-row:1 / span 4;width:172px;height:172px;aspect-ratio:1;border-radius:9px;object-fit:cover}
-  .the .ma{grid-column:2;grid-row:1;justify-self:start;font-size:11.5px;padding:3px 7px;max-width:100%}
-  .the .stt-box{grid-column:2;grid-row:2;justify-self:start;font-size:13px}
-  .the .goc{grid-column:2;grid-row:2;justify-self:end;font-size:15px}
-  .the .ten{grid-column:2;grid-row:3;margin:0;font-size:14px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden}
-  .the .lk{grid-column:2;grid-row:4;align-self:end;font-size:12.5px}
-  .the .tq-kenh{grid-column:1 / -1;grid-row:5;margin-top:6px}
-  .the .tq-kenh .tqk-dau{display:none}       /* chip kênh đã ghi trạng thái từng kênh ⇒ bỏ dòng tiêu đề để vừa ~2 thẻ / màn */
-  .the .tq-kenh .tqo-tich{font-size:12px;line-height:1.15;min-height:34px;padding:4px 3px}      /* chữ đủ, xuống 2 dòng nếu cần (không cắt …) */
+  .the{display:flex;flex-direction:column;padding:0;border-radius:12px;overflow:hidden;min-height:calc((100vh - 30px)/2);min-height:calc((100dvh - 30px)/2)}
+  .the>img,.the>.trong{flex:1 1 0;min-height:110px;width:100%;height:auto;aspect-ratio:auto;object-fit:contain;background:var(--ma-nen);border-radius:0}
+  .the .than{flex:0 0 auto;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 8px;align-items:center;padding:7px 10px 9px}
+  .the .ma{grid-column:1;grid-row:1;justify-self:start;font-size:12px;padding:3px 7px;max-width:100%}
+  .the .goc{grid-column:2;grid-row:1;font-size:15px}
+  .the .stt-box{grid-column:1;grid-row:2;justify-self:start;font-size:13px}
+  .the .lk{grid-column:2;grid-row:2;font-size:12.5px;white-space:nowrap}
+  .the .ten{grid-column:1 / -1;grid-row:3;margin:0;font-size:14.5px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .the .tq-kenh{grid-column:1 / -1;grid-row:4;margin-top:4px}
+  .the .tq-kenh .tqk-dau,.the .tq-kenh .tqo-bar,.the .tq-kenh .tqk-thieu{display:none}      /* tiêu đề, thanh tiến độ, khung vàng 'thiếu lượt' (chip đã ghi 'thiếu x/y lượt'; chi tiết trong cửa sổ phiếu) bỏ để mọi thẻ cao bằng nhau ⇒ đúng 2 thẻ / màn */
+  .the .tq-kenh{padding:4px}
+  .the .tq-kenh .tqo-tich{font-size:12px;line-height:1.15;min-height:30px;padding:3px}
   .the .tq-kenh .tqo.trong{aspect-ratio:auto;display:flex;place-items:normal}      /* trùng tên lớp .trong của ảnh giữ chỗ (aspect-ratio:1) làm ô 'chưa có phiếu' cao gấp 3 */
-  .the .tim-nut{top:14px;left:14px;width:34px;height:34px;font-size:19px}
+  .the .tim-nut{top:8px;left:8px;width:36px;height:36px;font-size:20px}
 }
 </style><script id="the-quay-web-js">
 (function(){
@@ -1775,7 +1776,7 @@ else window.addEventListener('storage',e=>{ if(e.key===KDQ) napDQ(); });   // nh
 // 16/10 — chủ dự án: "trước giờ chỉ dùng 1 link … KHÔNG ĐƯỢC ĐỔI LINK … sửa chữa gì phải trên đúng link đó"
 // ⇒ trang TỰ LÊN BẢN MỚI trên chính link này: 2 phút / lần (khi đang mở) đọc ~30 KB cuối trang trên máy chủ (module khác như lich_su_tim còn chèn sau) (dấu "tq-ban");
 // khác bản đang chạy ⇒ tải lại trang (tích chưa gửi vẫn nằm trong máy, lần mở sau tự đẩy lên sổ chung). Không cần nhân viên tự tải lại.
-const BAN="5cd5447def9de503";
+const BAN="14cd0c7b4a5dddec";
 async function xemBanMoi(){ if(document.hidden||!BAN) return;
   try{ const r=await fetch(location.href.split('#')[0].split('?')[0]+'?ban='+Date.now(),{headers:{Range:'bytes=-30000'},cache:'no-store'});
        const m=(await r.text()).match(/tq-ban:([0-9a-f]{8,})/); if(m&&m[1]!==BAN){ md.hidden=true; location.reload(); } }catch(_){} }
@@ -1885,4 +1886,4 @@ thanh.addEventListener('click',e=>{
   ghi(q,false); thanh.hidden=true; o.blur();
 });
 })();
-</script><!-- lich-su-tim:cuoi --><!-- build:3c44fe557d296e7b --><!-- tq-ban:5cd5447def9de503 --><div style="position:fixed;left:0;right:0;bottom:0;z-index:99999;background:#1f2937;color:#fff;font:600 12px system-ui;padding:6px 10px calc(6px + env(safe-area-inset-bottom,0px));text-align:center;opacity:.92">BẢN XEM THỬ · số liệu chụp 12:17 22/10 · bấm tích / tim chỉ ở máy bạn, không ghi lên sổ thật</div></body></html>
+</script><!-- lich-su-tim:cuoi --><!-- build:42dac96e3ca164e0 --><!-- tq-ban:14cd0c7b4a5dddec --><div style="position:fixed;left:0;right:0;bottom:0;z-index:99999;background:#1f2937;color:#fff;font:600 12px system-ui;padding:6px 10px calc(6px + env(safe-area-inset-bottom,0px));text-align:center;opacity:.92">BẢN XEM THỬ · số liệu chụp 12:58 22/10 · bấm tích / tim chỉ ở máy bạn, không ghi lên sổ thật</div></body></html>
