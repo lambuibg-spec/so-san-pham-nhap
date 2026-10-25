@@ -1537,6 +1537,8 @@ loc();
 #tqHop .dqr{flex:0 0 auto;border:2px solid #1f2937;background:#fff;color:#111827;border-radius:10px;padding:0 12px;font:inherit;font-size:15px;font-weight:800;cursor:pointer}
 #tqQR{position:fixed;inset:0;z-index:100000;background:#fff;color:#111827;display:flex;align-items:center;justify-content:center;text-align:center;padding:12px}
 #tqQR[hidden]{display:none}
+#tqQR .tqqr-back{position:fixed;top:max(10px,env(safe-area-inset-top));left:10px;z-index:2;border:2px solid #111827;background:#fff;color:#111827;border-radius:12px;padding:12px 18px;font:inherit;font-size:18px;font-weight:900;cursor:pointer;min-height:48px}
+#tqQR{cursor:pointer}
 #tqQR .tqqr-tieu{font-size:22px;font-weight:900}
 #tqQR .tqqr-so{font-size:20px;font-weight:800;margin:4px 0 10px}
 #tqQR .tqqr-ma{background:#fff;display:inline-block;line-height:0}
@@ -1659,10 +1661,13 @@ const kc=(ma,kenh,so,l,c)=>ma+'|'+pid(kenh,so)+'|c'+((+l)*100+(+c));
 const KENH_MA={'MAI ÁO ĐỎ':'AD','MAI THI DAILY':'MT','EM MAI REVIEW':'EM'};
 // 25/10/2026 — chủ dự án: "mỗi cảnh quay bấm vào là ra 1 QR CODE thể hiện KÊNH NÀO, SẢN PHẨM SỐ BAO NHIÊU, LƯỢT NÀO, CẢNH NÀO để máy nhận diện chính xác và không sai"
 // nội dung mã: TTK1|<AD|MT|EM>|<STT>|P<số phiếu>|L<lượt>|C<cảnh>   (vd TTK1|AD|778|P2|L1|C1) — tool cắt đọc bằng doc_qr.py (OpenCV)
+let qrDaPush=false;
+function dongQR(){ const o=document.getElementById('tqQR'); if(!o||o.hidden) return; if(qrDaPush){ qrDaPush=false; o.hidden=true; try{ history.back(); }catch(_){} } else o.hidden=true; }
+window.addEventListener('popstate',()=>{ const o=document.getElementById('tqQR'); if(o&&!o.hidden){ qrDaPush=false; o.hidden=true; } });
 function hienQR(ma,kenh,so,l,c,ten){ const k=TQ[ma], stt=k?k.stt:'?', nd='TTK1|'+(KENH_MA[kenh]||kenh)+'|'+stt+'|P'+so+'|L'+l+'|C'+c;
-  let o=document.getElementById('tqQR'); if(!o){ o=document.createElement('div'); o.id='tqQR'; document.body.appendChild(o); o.addEventListener('click',()=>{ o.hidden=true; }); }
+  let o=document.getElementById('tqQR'); if(!o){ o=document.createElement('div'); o.id='tqQR'; document.body.appendChild(o); o.addEventListener('click',dongQR); }
   let svg=''; try{ const q=qrcode(0,'Q'); q.addData(nd); q.make(); svg=q.createSvgTag({cellSize:8,margin:4,scalable:true}); }catch(e){ svg='<div style="font-size:20px;color:#b91c1c">Không tạo được mã QR ('+esc(e.message||e)+')</div>'; }
-  o.innerHTML='<div><div class="tqqr-tieu">'+esc(KN[kenh]||kenh)+' · SP'+esc(stt)+'</div><div class="tqqr-so">Lượt '+l+' · Cảnh '+c+' · '+esc(ten||'')+'</div><div class="tqqr-ma">'+svg+'</div><div class="tqqr-nd">'+esc(nd)+'</div><div class="tqqr-nho">Cho máy quay thấy mã 1–2 giây rồi mới làm cảnh · bấm bất kỳ đâu để đóng</div></div>'; o.hidden=false; }
+  o.innerHTML='<button type="button" class="tqqr-back">← Quay lại</button><div><div class="tqqr-tieu">'+esc(KN[kenh]||kenh)+' · SP'+esc(stt)+'</div><div class="tqqr-so">Lượt '+l+' · Cảnh '+c+' · '+esc(ten||'')+'</div><div class="tqqr-ma">'+svg+'</div><div class="tqqr-nd">'+esc(nd)+'</div><div class="tqqr-nho">Cho máy quay thấy mã 1–2 giây rồi mới làm cảnh · bấm bất kỳ đâu hoặc nút Quay lại / Back của điện thoại để đóng</div></div>'; o.hidden=false; if(!qrDaPush){ try{ history.pushState({tqqr:1},''); qrDaPush=true; }catch(_){} } }
 const kk=(ma,kenh,so,l,c)=>ma+'|'+pid(kenh,so)+'|c'+(100000+(+l)*100+(+c));
 const coKT=(ma,kenh,so,l,c)=>{ const v=DQ[kk(ma,kenh,so,l,c)]; return !!(v&&+v.x); };
 function tinhLuot(ma,kenh,so,x){ const n=x.co.length, ql=daQ(ma,kenh,so,x.so);
@@ -1754,7 +1759,7 @@ md.addEventListener('click',e=>{ if(e.target===md||e.target.id==='tqDong'){ md.h
   const a=e.target.closest('.pq-tatca'); if(a&&!a.disabled){ tichPhieu(a.dataset.ma, a.dataset.kenh, +a.dataset.p); return; }
   const k=e.target.closest('[data-tqk]'); if(k&&!k.disabled){ mo(k.dataset.ma, k.dataset.tqk); return; }
   const p=e.target.closest('[data-tqp]'); if(p) mo(p.dataset.ma, p.dataset.kenh, +p.dataset.tqp); });
-document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ const q=document.getElementById('tqQR'); if(q&&!q.hidden){ q.hidden=true; return; } md.hidden=true; dangMo=null; } });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ const q=document.getElementById('tqQR'); if(q&&!q.hidden){ dongQR(); return; } md.hidden=true; dangMo=null; } });
 function mo(ma, kenh, so, giuCuon){ const k=TQ[ma]; if(!k) return; kenh=k.kenh[kenh]?kenh:kenhDau(k); const v=k.kenh[kenh]; if(!v) return;
   const p=so?v.phieu.find(x=>x.so===so):hien(v); if(!p) return;
   const cuon=md.scrollTop; dangMo={ma,kenh,so:p.so};
@@ -1830,7 +1835,7 @@ else window.addEventListener('storage',e=>{ if(e.key===KDQ) napDQ(); });   // nh
 // 16/10 — chủ dự án: "trước giờ chỉ dùng 1 link … KHÔNG ĐƯỢC ĐỔI LINK … sửa chữa gì phải trên đúng link đó"
 // ⇒ trang TỰ LÊN BẢN MỚI trên chính link này: 2 phút / lần (khi đang mở) đọc ~30 KB cuối trang trên máy chủ (module khác như lich_su_tim còn chèn sau) (dấu "tq-ban");
 // khác bản đang chạy ⇒ tải lại trang (tích chưa gửi vẫn nằm trong máy, lần mở sau tự đẩy lên sổ chung). Không cần nhân viên tự tải lại.
-const BAN="77af020ecf78a51f";
+const BAN="7de3a51ba56cbe65";
 async function xemBanMoi(){ if(document.hidden||!BAN) return;
   try{ const r=await fetch(location.href.split('#')[0].split('?')[0]+'?ban='+Date.now(),{headers:{Range:'bytes=-30000'},cache:'no-store'});
        const m=(await r.text()).match(/tq-ban:([0-9a-f]{8,})/); if(m&&m[1]!==BAN){ md.hidden=true; location.reload(); } }catch(_){} }
@@ -1940,4 +1945,4 @@ thanh.addEventListener('click',e=>{
   ghi(q,false); thanh.hidden=true; o.blur();
 });
 })();
-</script><!-- lich-su-tim:cuoi --><!-- build:1c61d46711b5de00 --><!-- tq-ban:77af020ecf78a51f --><div style="position:fixed;left:0;right:0;bottom:0;z-index:99999;background:#1f2937;color:#fff;font:600 12px system-ui;padding:6px 10px calc(6px + env(safe-area-inset-bottom,0px));text-align:center;opacity:.92">BẢN XEM THỬ · số liệu chụp 22:23 25/10 · bấm tích / tim chỉ ở máy bạn, không ghi lên sổ thật</div>
+</script><!-- lich-su-tim:cuoi --><!-- build:a0cb9e43f99b8b1b --><!-- tq-ban:7de3a51ba56cbe65 --><div style="position:fixed;left:0;right:0;bottom:0;z-index:99999;background:#1f2937;color:#fff;font:600 12px system-ui;padding:6px 10px calc(6px + env(safe-area-inset-bottom,0px));text-align:center;opacity:.92">BẢN XEM THỬ · số liệu chụp 22:40 25/10 · bấm tích / tim chỉ ở máy bạn, không ghi lên sổ thật</div>
