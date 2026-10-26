@@ -1870,10 +1870,9 @@ function mo(ma, kenh, so, giuCuon){ const k=TQ[ma]; if(!k) return; kenh=k.kenh[k
   const xong=T.nl>=T.L.length;
   if(T.co&&!xong) h+='<div class="tq-thieu">⚠ CÒN THIẾU '+chuaL.length+'/'+T.L.length+' LƯỢT — quay nốt rồi tích'+thieuZ.filter(z=>z.co).map(z=>'<span>⚠ '+esc(moTaThieu(z))+'</span>').join('')+(thieuZ.some(z=>!z.co)?'<span>Chưa quay: lượt '+thieuZ.filter(z=>!z.co).map(z=>z.x.so).join(', ')+'</span>':'')+'</div>';
   h+='<button type="button" class="pq-tatca'+(xong?' da':'')+'" data-ma="'+ma+'" data-kenh="'+esc(kenh)+'" data-p="'+p.so+'"'+(p.ten.indexOf('⛔')>=0?' disabled':'')+'>'+(xong?'✅ ĐÃ QUAY XONG CẢ PHIẾU · bấm để bỏ tích':'☐ Tích đã quay CẢ PHIẾU ('+(T.L.length-T.nl)+' lượt còn lại)')+'</button>';
-  h+='<div class="tq-gc">⏱ '+esc(GC)+'</div>';
-  if(OS) h+='<div class="tq-docbox">🎙 <b>CÁCH ĐỌC MỖI LƯỢT ONE SHORT</b> (tên kênh + mã + nội dung + cảnh):<br><span class="vd">"'+esc(v.doc)+', nội dung 1, cảnh 1."</span><br>→ làm ngay: <b>quay liền MỘT MẠCH, không cắt</b> theo nội dung đó → xong thì dừng máy. Lượt sau đọc <b>"'+esc(v.doc)+', nội dung 2, cảnh 1."</b> …<br>Số nội dung đọc số thường ("nội dung mười hai"), số sản phẩm đọc từng chữ số. Không nói chuyện lúc quay. <b>Quay xong lượt nào tích ngay ô "☐ Cảnh 1" của lượt đó</b>. Nút góc phải = tích cả lượt.<br>▦ <b>MÃ QR:</b> mỗi lượt có nút <b>▦ QR</b> → đưa mã vào máy quay 1–2 giây rồi mới quay; tool cắt đọc mã để nhận đúng nội dung (mã dạng …-P'+p.so+'-L<nội dung>-C1).</div>';
-  else h+='<div class="tq-docbox">🎙 <b>CÁCH ĐỌC MỖI CẢNH</b> (tên kênh + mã + lượt + cảnh):<br><span class="vd">"'+esc(v.doc)+', lượt 1, cảnh 1."</span><br>→ chờ nửa giây → làm đúng 1 hành động 3–5 giây → <b>"Tạm dừng."</b><br>Cảnh sau: <b>"'+esc(v.doc)+', lượt 1, cảnh 2."</b> … Cảnh cuối của lượt đọc <b>"Kết thúc."</b><br>Không cần đọc cỡ (cỡ ghi dưới mỗi lượt). Không nói chuyện lúc quay. Quay đúng thứ tự lượt. <b>Quay xong CẢNH nào tích ngay ô "☐ Cảnh …" của cảnh đó</b> — thiếu 1 cảnh là lượt chưa xong (báo vàng). <b>Cảnh nào mẫu KHÔNG TỰ QUAY ĐƯỢC</b> thì tích ô <b>"☐ Mẫu không tự quay được"</b> dưới cảnh đó thay thế — vẫn tính là xong cảnh, tool sẽ đi lấy cảnh đó ở nguồn khác. Nút góc phải = tích cả lượt.<br>▦ <b>MÃ QR:</b> bấm nút <b>▦ QR</b> cạnh cảnh → màn hình hiện mã (kênh · sản phẩm · lượt · cảnh) → đưa mã vào máy quay 1–2 giây rồi mới làm cảnh; tool cắt đọc mã để nhận đúng cảnh.</div>';
-  if(p.chuan_bi) h+='<p class="tq-doc"><b>Chuẩn bị:</b> '+esc(p.chuan_bi)+'</p>';
+  if(!OS) h+='<div class="tq-gc">⏱ '+esc(GC)+'</div>';
+  if(!OS) h+='<div class="tq-docbox">🎙 <b>CÁCH ĐỌC MỖI CẢNH</b> (tên kênh + mã + lượt + cảnh):<br><span class="vd">"'+esc(v.doc)+', lượt 1, cảnh 1."</span><br>→ chờ nửa giây → làm đúng 1 hành động 3–5 giây → <b>"Tạm dừng."</b><br>Cảnh sau: <b>"'+esc(v.doc)+', lượt 1, cảnh 2."</b> … Cảnh cuối của lượt đọc <b>"Kết thúc."</b><br>Không cần đọc cỡ (cỡ ghi dưới mỗi lượt). Không nói chuyện lúc quay. Quay đúng thứ tự lượt. <b>Quay xong CẢNH nào tích ngay ô "☐ Cảnh …" của cảnh đó</b> — thiếu 1 cảnh là lượt chưa xong (báo vàng). <b>Cảnh nào mẫu KHÔNG TỰ QUAY ĐƯỢC</b> thì tích ô <b>"☐ Mẫu không tự quay được"</b> dưới cảnh đó thay thế — vẫn tính là xong cảnh, tool sẽ đi lấy cảnh đó ở nguồn khác. Nút góc phải = tích cả lượt.<br>▦ <b>MÃ QR:</b> bấm nút <b>▦ QR</b> cạnh cảnh → màn hình hiện mã (kênh · sản phẩm · lượt · cảnh) → đưa mã vào máy quay 1–2 giây rồi mới làm cảnh; tool cắt đọc mã để nhận đúng cảnh.</div>';
+  if(p.chuan_bi&&!OS) h+='<p class="tq-doc"><b>Chuẩn bị:</b> '+esc(p.chuan_bi)+'</p>';
   let nh=null; T.L.forEach(z=>{ const {x,dq}=z; if(x.nhom&&x.nhom!==nh){ nh=x.nhom; h+='<h3>'+esc(nh)+'</h3>'; }
     const gi=(x.lam||'').indexOf('⚠'); const lam=gi>=0?x.lam.slice(0,gi).trim():x.lam, ghep=gi>=0?x.lam.slice(gi):'';   // 14/10 điểm 13: lượt ghép ảnh
     const dt='data-ma="'+ma+'" data-kenh="'+esc(kenh)+'" data-p="'+p.so+'" data-l="'+x.so+'"';
@@ -1928,7 +1927,7 @@ else window.addEventListener('storage',e=>{ if(e.key===KDQ) napDQ(); });   // nh
 // 16/10 — chủ dự án: "trước giờ chỉ dùng 1 link … KHÔNG ĐƯỢC ĐỔI LINK … sửa chữa gì phải trên đúng link đó"
 // ⇒ trang TỰ LÊN BẢN MỚI trên chính link này: 2 phút / lần (khi đang mở) đọc ~30 KB cuối trang trên máy chủ (module khác như lich_su_tim còn chèn sau) (dấu "tq-ban");
 // khác bản đang chạy ⇒ tải lại trang (tích chưa gửi vẫn nằm trong máy, lần mở sau tự đẩy lên sổ chung). Không cần nhân viên tự tải lại.
-const BAN="0f89bd86d94ac48a";
+const BAN="f03a1db6fc8075a3";
 async function xemBanMoi(){ if(document.hidden||!BAN) return;
   try{ const r=await fetch(location.href.split('#')[0].split('?')[0]+'?ban='+Date.now(),{headers:{Range:'bytes=-30000'},cache:'no-store'});
        const m=(await r.text()).match(/tq-ban:([0-9a-f]{8,})/); if(m&&m[1]!==BAN){ md.hidden=true; location.reload(); } }catch(_){} }
@@ -1975,4 +1974,4 @@ if(nutTim && !document.getElementById('nutPhieu')){
   ve(); (nutChep||nutTim).after(np); np.after(lq);
 }
 })();
-</script><!-- the-quay-web:cuoi --><!-- tq-ban:0f89bd86d94ac48a --><div style="position:fixed;left:0;right:0;bottom:0;z-index:99999;background:#1f2937;color:#fff;font:600 12px system-ui;padding:6px 10px calc(6px + env(safe-area-inset-bottom,0px));text-align:center;opacity:.92">BẢN XEM THỬ · số liệu chụp 14:34 26/10 · bấm tích / tim chỉ ở máy bạn, không ghi lên sổ thật</div>
+</script><!-- the-quay-web:cuoi --><!-- tq-ban:f03a1db6fc8075a3 --><div style="position:fixed;left:0;right:0;bottom:0;z-index:99999;background:#1f2937;color:#fff;font:600 12px system-ui;padding:6px 10px calc(6px + env(safe-area-inset-bottom,0px));text-align:center;opacity:.92">BẢN XEM THỬ · số liệu chụp 14:34 26/10 · bấm tích / tim chỉ ở máy bạn, không ghi lên sổ thật</div>
